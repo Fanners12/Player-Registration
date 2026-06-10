@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CM Register">
+<meta name="theme-color" content="#0a0a0f">
+<title>Player Registration - AG Coaching Masterclass</title>
+<link rel="manifest" href="./reg-manifest.json">
+<link rel="apple-touch-icon" href="./ag-icon-192.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0f;color:#f0f0f0;min-height:100vh}
+:root{--accent:#1A6B3C;--accent-light:#e8f5ee;--surface:#13131a;--surface2:#1c1c26;--border:#2a2a38;--muted:#8888a0;--text:#f0f0f0;--danger:#ff4d4d;--success:#39ff14}
+.topbar{background:#0a0a0f;border-bottom:1px solid var(--border);padding:14px 16px;text-align:center}
+.logo{font-size:18px;font-weight:800;color:#1A6B3C;letter-spacing:-0.3px}
+.logo span{color:var(--text)}
+.logo-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.progress-bar{height:4px;background:var(--surface2);margin:0}
+.progress-fill{height:100%;background:#1A6B3C;transition:width 0.3s}
+.content{padding:16px;max-width:600px;margin:0 auto;padding-bottom:40px}
+.step{display:none}
+.step.active{display:block}
+.step-title{font-size:20px;font-weight:800;margin-bottom:4px;color:var(--text)}
+.step-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+.form-row{margin-bottom:14px}
+.form-label{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.5px}
+.input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:15px;outline:none;font-family:inherit;-webkit-appearance:none}
+.input:focus{border-color:#1A6B3C}
+.select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:15px;outline:none;cursor:pointer;font-family:inherit;-webkit-appearance:none}
+.select:focus{border-color:#1A6B3C}
+.textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:15px;outline:none;resize:vertical;min-height:80px;font-family:inherit;-webkit-appearance:none}
+.textarea:focus{border-color:#1A6B3C}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.check-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;transition:all 0.15s}
+.check-item.selected{border-color:#1A6B3C;background:rgba(26,107,60,0.1);color:#39ff14}
+.check-item i{font-size:16px;flex-shrink:0}
+.check-item.selected i{color:#39ff14}
+.consent-box{background:rgba(26,107,60,0.08);border:1px solid rgba(26,107,60,0.3);border-radius:12px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.7;color:#ccc}
+.consent-item{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start;font-size:13px;color:var(--text)}
+.consent-item:last-child{margin-bottom:0}
+.consent-check{width:20px;height:20px;border-radius:4px;border:1px solid var(--border);background:var(--surface2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all 0.15s}
+.consent-check.checked{background:#1A6B3C;border-color:#1A6B3C}
+.consent-check.checked::after{content:'✓';color:white;font-size:12px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:12px;border:none;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.btn:active{transform:scale(0.98)}
+.btn-accent{background:#1A6B3C;color:white}
+.btn-outline{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-row{display:flex;gap:10px;margin-top:8px}
+.btn-row .btn{flex:1}
+.required{color:#ff4d4d;margin-left:2px}
+.error{color:#ff4d4d;font-size:11px;margin-top:4px;display:none}
+.error.show{display:block}
+.success-screen{text-align:center;padding:40px 20px}
+.success-icon{font-size:64px;color:#1A6B3C;margin-bottom:16px}
+.success-title{font-size:24px;font-weight:800;margin-bottom:8px}
+.success-sub{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+.ref-box{background:var(--surface);border:1px solid #1A6B3C;border-radius:12px;padding:16px;margin-bottom:20px}
+.ref-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.ref-num{font-size:22px;font-weight:800;color:#1A6B3C;letter-spacing:2px}
+.step-indicator{display:flex;justify-content:center;gap:6px;margin-bottom:20px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all 0.3s}
+.dot.active{background:#1A6B3C;width:20px;border-radius:4px}
+.dot.done{background:rgba(26,107,60,0.5)}
+.pkg-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.pkg-item{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all 0.15s}
+.pkg-item.selected{border-color:#1A6B3C;background:rgba(26,107,60,0.08)}
+.pkg-name{font-size:15px;font-weight:700;margin-bottom:2px}
+.pkg-desc{font-size:12px;color:var(--muted)}
+.pkg-price{font-size:18px;font-weight:800;color:#1A6B3C;margin-top:6px}
+.pkg-item.selected .pkg-name{color:#39ff14}
+.info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.info-row:last-child{border-bottom:none}
+.info-label{color:var(--muted)}
+.info-val{font-weight:600;text-align:right;max-width:60%}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">COACHING <span>MASTERCLASS</span></div>
+  <div class="logo-sub">Player Registration Form</div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:20%"></div></div>
+
+<div class="content">
+  <div class="step-indicator" id="dots"></div>
+
+  <!-- STEP 1: Player Details -->
+  <div class="step active" id="step-1">
+    <div class="step-title">Player Details</div>
+    <div class="step-sub">Tell us about the player joining</div>
+    <div class="card">
+      <div class="form-row">
+        <label class="form-label">Full Name <span class="required">*</span></label>
+        <input class="input" id="player-name" placeholder="Player's full name" autocomplete="name">
+        <div class="error" id="err-player-name">Please enter the player's name</div>
+      </div>
+      <div class="grid2">
+        <div class="form-row">
+          <label class="form-label">Date of Birth <span class="required">*</span></label>
+          <input class="input" id="dob" type="date">
+          <div class="error" id="err-dob">Required</div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Position</label>
+          <select class="select" id="position">
+            <option value="">Select...</option>
+            <option>Goalkeeper</option>
+            <option>Centre Back</option>
+            <option>Full Back</option>
+            <option>Defensive Mid</option>
+            <option>Central Mid</option>
+            <option>Attacking Mid</option>
+            <option>Winger</option>
+            <option>Striker</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Age Group <span class="required">*</span></label>
+        <div class="check-grid" id="age-group-grid">
+          <div class="check-item" onclick="selectAge(this,'kids')"><i class="ti ti-ball-football"></i>Kids (5–11)</div>
+          <div class="check-item" onclick="selectAge(this,'u14')"><i class="ti ti-run"></i>Under 14 (12–13)</div>
+          <div class="check-item" onclick="selectAge(this,'u16')"><i class="ti ti-barbell"></i>Under 16 (14–15)</div>
+          <div class="check-item" onclick="selectAge(this,'u18')"><i class="ti ti-flame"></i>Under 18 (16–17)</div>
+          <div class="check-item" onclick="selectAge(this,'adult')"><i class="ti ti-bolt"></i>Adult (18–35)</div>
+          <div class="check-item" onclick="selectAge(this,'vet')"><i class="ti ti-target"></i>Veteran (35+)</div>
+        </div>
+        <div class="error" id="err-age">Please select an age group</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">School / Club (optional)</label>
+        <input class="input" id="school" placeholder="e.g. St Patrick's FC">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-accent" onclick="nextStep(1)"><i class="ti ti-arrow-right"></i>Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Parent/Guardian -->
+  <div class="step" id="step-2">
+    <div class="step-title">Parent / Guardian</div>
+    <div class="step-sub">Contact details for the responsible adult</div>
+    <div class="card">
+      <div class="form-row">
+        <label class="form-label">Full Name <span class="required">*</span></label>
+        <input class="input" id="parent-name" placeholder="Parent or guardian's full name" autocomplete="name">
+        <div class="error" id="err-parent-name">Please enter a name</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Relationship to Player</label>
+        <select class="select" id="relationship">
+          <option value="">Select...</option>
+          <option>Mother</option>
+          <option>Father</option>
+          <option>Guardian</option>
+          <option>Other</option>
+          <option>Self (adult player)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Primary Phone <span class="required">*</span></label>
+        <input class="input" id="phone" type="tel" placeholder="Mobile number" autocomplete="tel">
+        <div class="error" id="err-phone">Please enter a phone number</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Email Address</label>
+        <input class="input" id="email" type="email" placeholder="email@example.com" autocomplete="email">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Home Address</label>
+        <input class="input" id="address" placeholder="Street, Town">
+      </div>
+    </div>
+    <div class="card">
+      <div class="form-row" style="margin-bottom:0">
+        <label class="form-label">Emergency Contact (if different)</label>
+      </div>
+      <div class="grid2" style="margin-top:10px">
+        <div class="form-row">
+          <label class="form-label">Name</label>
+          <input class="input" id="emerg-name" placeholder="Full name">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Phone</label>
+          <input class="input" id="emerg-phone" type="tel" placeholder="Number">
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="prevStep(2)"><i class="ti ti-arrow-left"></i>Back</button>
+      <button class="btn btn-accent" onclick="nextStep(2)"><i class="ti ti-arrow-right"></i>Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Medical -->
+  <div class="step" id="step-3">
+    <div class="step-title">Medical Information</div>
+    <div class="step-sub">Important for the coach to know before training</div>
+    <div class="card">
+      <div class="form-row">
+        <label class="form-label">Medical Conditions / Allergies <span class="required">*</span></label>
+        <div class="check-grid" style="grid-template-columns:1fr 1fr;margin-bottom:10px">
+          <div class="check-item" onclick="selectMed(this,'none')"><i class="ti ti-circle-check"></i>No conditions</div>
+          <div class="check-item" onclick="selectMed(this,'yes')"><i class="ti ti-alert-circle"></i>Yes — see below</div>
+        </div>
+        <textarea class="textarea" id="medical-detail" placeholder="Please describe any conditions, allergies or disabilities the coach should know about..." style="min-height:60px"></textarea>
+        <div class="error" id="err-medical">Please select an option</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Carries Medication?</label>
+        <div class="check-grid" style="grid-template-columns:1fr 1fr">
+          <div class="check-item" onclick="selectMeds(this,'no')"><i class="ti ti-x"></i>No medication</div>
+          <div class="check-item" onclick="selectMeds(this,'yes')"><i class="ti ti-pill"></i>Yes — inhaler/EpiPen etc.</div>
+        </div>
+      </div>
+      <div class="form-row" style="margin-bottom:0">
+        <label class="form-label">GP Contact (optional)</label>
+        <input class="input" id="gp" placeholder="GP name and phone number">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="prevStep(3)"><i class="ti ti-arrow-left"></i>Back</button>
+      <button class="btn btn-accent" onclick="nextStep(3)"><i class="ti ti-arrow-right"></i>Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Package -->
+  <div class="step" id="step-4">
+    <div class="step-title">Coaching Package</div>
+    <div class="step-sub">Choose the package that suits you</div>
+    <div class="card">
+      <div class="pkg-grid" id="pkg-grid">
+        <div class="pkg-item" onclick="selectPkg(this,'monthly')">
+          <div class="pkg-name">Monthly Package</div>
+          <div class="pkg-desc">1 session per week — best value</div>
+          <div class="pkg-price">€40 / month</div>
+        </div>
+        <div class="pkg-item" onclick="selectPkg(this,'session')">
+          <div class="pkg-name">Pay Per Session</div>
+          <div class="pkg-desc">Flexible — no commitment</div>
+          <div class="pkg-price">€12 / session</div>
+        </div>
+        <div class="pkg-item" onclick="selectPkg(this,'premium')">
+          <div class="pkg-name">Premium Package</div>
+          <div class="pkg-desc">Monthly + AI personal development plan review with coach</div>
+          <div class="pkg-price">€65 / month</div>
+        </div>
+      </div>
+      <div class="error" id="err-pkg" style="margin-top:8px">Please select a package</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="prevStep(4)"><i class="ti ti-arrow-left"></i>Back</button>
+      <button class="btn btn-accent" onclick="nextStep(4)"><i class="ti ti-arrow-right"></i>Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: Consent -->
+  <div class="step" id="step-5">
+    <div class="step-title">Consent & Agreement</div>
+    <div class="step-sub">Please read and confirm each item</div>
+    <div class="card">
+      <div id="consent-items">
+        <div class="consent-item">
+          <div class="consent-check" id="c1" onclick="toggleConsent('c1')"></div>
+          <span>I give permission for this player to participate in Coaching Masterclass training sessions.</span>
+        </div>
+        <div class="consent-item">
+          <div class="consent-check" id="c2" onclick="toggleConsent('c2')"></div>
+          <span>I understand sessions involve physical activity and accept the inherent risks of football training.</span>
+        </div>
+        <div class="consent-item">
+          <div class="consent-check" id="c3" onclick="toggleConsent('c3')"></div>
+          <span>The medical information provided is accurate and I will notify the coach of any changes.</span>
+        </div>
+        <div class="consent-item">
+          <div class="consent-check" id="c4" onclick="toggleConsent('c4')"></div>
+          <span>I give permission for the coach to seek emergency medical treatment if I cannot be reached.</span>
+        </div>
+        <div class="consent-item">
+          <div class="consent-check" id="c5" onclick="toggleConsent('c5')"></div>
+          <span>I agree to the monthly fee and understand one month's notice is required to cancel.</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+        <label class="form-label">Photos & Video for Social Media</label>
+        <div class="check-grid" style="grid-template-columns:1fr 1fr">
+          <div class="check-item" onclick="selectPhoto(this,'yes')"><i class="ti ti-camera"></i>Yes — I consent</div>
+          <div class="check-item" onclick="selectPhoto(this,'no')"><i class="ti ti-camera-off"></i>No — I do not consent</div>
+        </div>
+      </div>
+      <div class="error" id="err-consent" style="margin-top:8px">Please confirm all consent items above</div>
+    </div>
+    <div class="card">
+      <div class="form-row" style="margin-bottom:0">
+        <label class="form-label">Full Name (as signature) <span class="required">*</span></label>
+        <input class="input" id="sig-name" placeholder="Type your full name to sign">
+        <div class="error" id="err-sig">Please enter your name as a signature</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="prevStep(5)"><i class="ti ti-arrow-left"></i>Back</button>
+      <button class="btn btn-accent" onclick="submitForm()"><i class="ti ti-check"></i>Submit Registration</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="step" id="step-success">
+    <div class="success-screen">
+      <div class="success-icon"><i class="ti ti-circle-check"></i></div>
+      <div class="success-title">Registration Complete!</div>
+      <div class="success-sub">Your registration has been submitted to Coaching Masterclass. The coach will be in touch to confirm your session details.</div>
+      <div class="ref-box">
+        <div class="ref-label">Registration Reference</div>
+        <div class="ref-num" id="ref-num">CM-0000</div>
+      </div>
+      <div class="card" style="text-align:left">
+        <div class="info-row"><span class="info-label">Player</span><span class="info-val" id="sum-player"></span></div>
+        <div class="info-row"><span class="info-label">Age Group</span><span class="info-val" id="sum-age"></span></div>
+        <div class="info-row"><span class="info-label">Package</span><span class="info-val" id="sum-pkg"></span></div>
+        <div class="info-row"><span class="info-label">Parent / Guardian</span><span class="info-val" id="sum-parent"></span></div>
+        <div class="info-row"><span class="info-label">Phone</span><span class="info-val" id="sum-phone"></span></div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:8px">
+        Download the <strong style="color:#1A6B3C">Player Zone</strong> app at<br>
+        <strong style="color:var(--text)">fanners12.github.io/Player-Zone/player-zone.html</strong>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const TOTAL_STEPS = 5;
+let currentStep = 1;
+let formData = { ageGroup:'', medStatus:'', medsStatus:'', pkg:'', photoConsent:'', consents:new Set() };
+
+function updateProgress(){
+  const pct = (currentStep / TOTAL_STEPS) * 100;
+  document.getElementById('prog').style.width = pct + '%';
+  const dots = document.getElementById('dots');
+  dots.innerHTML = '';
+  for(let i=1;i<=TOTAL_STEPS;i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===currentStep?' active':i<currentStep?' done':'');
+    dots.appendChild(d);
+  }
+}
+
+function showStep(n){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('step-'+(n==='success'?'success':n));
+  if(el) el.classList.add('active');
+  window.scrollTo(0,0);
+  updateProgress();
+}
+
+function nextStep(from){
+  if(!validateStep(from)) return;
+  currentStep = from + 1;
+  showStep(currentStep);
+}
+function prevStep(from){
+  currentStep = from - 1;
+  showStep(currentStep);
+}
+
+function validateStep(n){
+  let ok = true;
+  const show = (id, show) => { document.getElementById(id).classList.toggle('show', show); };
+  if(n===1){
+    const name = document.getElementById('player-name').value.trim();
+    const dob = document.getElementById('dob').value;
+    show('err-player-name', !name); if(!name) ok=false;
+    show('err-dob', !dob); if(!dob) ok=false;
+    show('err-age', !formData.ageGroup); if(!formData.ageGroup) ok=false;
+  }
+  if(n===2){
+    const pname = document.getElementById('parent-name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    show('err-parent-name', !pname); if(!pname) ok=false;
+    show('err-phone', !phone); if(!phone) ok=false;
+  }
+  if(n===3){
+    show('err-medical', !formData.medStatus); if(!formData.medStatus) ok=false;
+  }
+  if(n===4){
+    show('err-pkg', !formData.pkg); if(!formData.pkg) ok=false;
+  }
+  if(n===5){
+    const allConsents = formData.consents.size >= 5;
+    show('err-consent', !allConsents); if(!allConsents) ok=false;
+    const sig = document.getElementById('sig-name').value.trim();
+    show('err-sig', !sig); if(!sig) ok=false;
+  }
+  return ok;
+}
+
+function selectAge(el, val){
+  document.querySelectorAll('#age-group-grid .check-item').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  formData.ageGroup = val;
+}
+function selectMed(el, val){
+  document.querySelectorAll('.check-item[onclick*="selectMed"]').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  formData.medStatus = val;
+}
+function selectMeds(el, val){
+  document.querySelectorAll('.check-item[onclick*="selectMeds"]').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  formData.medsStatus = val;
+}
+function selectPkg(el, val){
+  document.querySelectorAll('#pkg-grid .pkg-item').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  formData.pkg = val;
+}
+function selectPhoto(el, val){
+  document.querySelectorAll('.check-item[onclick*="selectPhoto"]').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  formData.photoConsent = val;
+}
+function toggleConsent(id){
+  const el = document.getElementById(id);
+  const num = parseInt(id.replace('c',''));
+  if(el.classList.contains('checked')){
+    el.classList.remove('checked');
+    formData.consents.delete(num);
+  } else {
+    el.classList.add('checked');
+    formData.consents.add(num);
+  }
+}
+
+const AGE_LABELS = {kids:'Kids (5–11)',u14:'Under 14',u16:'Under 16',u18:'Under 18',adult:'Adult (18+)',vet:'Veteran (35+)'};
+const PKG_LABELS = {monthly:'Monthly — €40/month',session:'Pay Per Session — €12',premium:'Premium — €65/month'};
+
+function submitForm(){
+  if(!validateStep(5)) return;
+  const ref = 'CM-' + Math.random().toString(36).substr(2,6).toUpperCase();
+  document.getElementById('ref-num').textContent = ref;
+  document.getElementById('sum-player').textContent = document.getElementById('player-name').value;
+  document.getElementById('sum-age').textContent = AGE_LABELS[formData.ageGroup]||formData.ageGroup;
+  document.getElementById('sum-pkg').textContent = PKG_LABELS[formData.pkg]||formData.pkg;
+  document.getElementById('sum-parent').textContent = document.getElementById('parent-name').value;
+  document.getElementById('sum-phone').textContent = document.getElementById('phone').value;
+  currentStep = 'success';
+  document.getElementById('prog').style.width = '100%';
+  document.getElementById('dots').innerHTML = '';
+  showStep('success');
+}
+
+updateProgress();
+</script>
+</body>
+</html>
